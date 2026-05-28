@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이 페이보릿 아카이브 | My Favorite Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <nav class="nav-tabs" id="navTabs"></nav>
+      <div class="header-icons">
+        <button class="cat-add-btn" id="openCategoryModal"><i class="fa-solid fa-plus"></i>카테고리</button>
+        <span class="login-badge" id="userBadge"></span>
+        <button class="cat-add-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i>로그아웃</button>
+      </div>
+    </header>
+
+    <div class="magazine-body">
+      <aside class="side-rail">
+        <div class="rail-meta">Editorial Index</div>
+        <div class="rail-title" id="railYear">2025 Archive</div>
+        <div class="rail-list" id="railList"></div>
+      </aside>
+
+      <div class="content-column">
+        <section class="hero-section">
+          <div>
+            <div class="hero-subtitle">My Favorite Archive</div>
+            <h1 class="hero-title">취향을 모아 놓은, 나만의 잡지</h1>
+            <p style="color: var(--text-sub); font-size: 14px; max-width: 560px;">연도별, 분위기별로 좋아했던 순간들을 모아두고 다시 꺼내 읽어보는 아카이브. 기록할수록 나만의 흐름이 선명해집니다.</p>
+          </div>
+        </section>
+
+        <section class="top-section">
+          <aside class="profile-card">
+            <div class="profile-avatar"><i class="fa-regular fa-circle-user"></i></div>
+            <h2 id="profileName" style="font-size: 28px; font-weight: 700; letter-spacing: 0.02em;"></h2>
+            <div class="profile-bio-row">
+              <p id="profileBio" style="color: var(--text-sub); font-size: 14px; letter-spacing: 0.03em;"></p>
+              <button class="bio-edit-btn" id="editBioBtn"><i class="fa-solid fa-pen"></i></button>
+            </div>
+            <button class="btn-add" id="openModal">
+              <i class="fa-solid fa-plus"></i> 직접 취향 기록하기
+            </button>
+          </aside>
+
+          <div class="info-column">
+            <div class="year-banner">
+              <div style="flex: 1;">
+                <h3 style="font-size: 22px; font-weight: 700; color: var(--point-text); letter-spacing: 0.08em; text-transform: uppercase;">Time Archive</h3>
+                <p style="font-size: 12px; color: var(--text-sub); letter-spacing: 0.12em; text-transform: uppercase;">연도별로 나의 취향을 탐색해 보세요</p>
+              </div>
+              <div class="year-display">
+                <i class="fa-solid fa-chevron-left"></i>
+                <span id="yearDisplay">2025</span>
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+
+            <div class="summary-card">
+              <h3 id="summaryYear" style="font-size: 20px; font-weight: 700; letter-spacing: 0.02em;">2025년 아카이브 현황</h3>
+              <div class="stats-grid" id="statsGrid"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-section">
+          <div class="tag-filter-container" id="tagList"></div>
+          <div class="archive-grid" id="cardGrid"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <dialog id="addModal">
+    <h2 class="modal-title">새 취향 기록하기</h2>
+    <form id="recordForm">
+      <div class="form-group">
+        <label>카테고리 선택</label>
+        <select id="f-category" required></select>
+      </div>
+      <div class="form-group">
+        <label>제목</label>
+        <input type="text" id="f-title" placeholder="인셉션, Ditto 등" required>
+      </div>
+      <div class="form-group">
+        <label>부제 (아티스트, 감독, 장소)</label>
+        <input type="text" id="f-subtitle" placeholder="크리스토퍼 놀란" required>
+      </div>
+      <div class="form-group">
+        <label>해시태그 (쉼표로 구분)</label>
+        <input type="text" id="f-tags" placeholder="#비오는날, #인생작" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="closeModal">취소</button>
+        <button type="submit" class="btn-save">저장하기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="categoryModal">
+    <h2 class="modal-title">카테고리 관리</h2>
+    <form id="categoryForm">
+      <div class="form-group">
+        <label>새 카테고리</label>
+        <div class="category-input-row">
+          <input type="text" id="newCategoryName" placeholder="예: 전시, 공연" required>
+          <button type="submit" class="btn-cat-submit"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </form>
+    <div class="category-list" id="categoryList"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="closeCategoryModal">닫기</button>
+    </div>
+  </dialog>
+
+  <dialog id="avatarModal">
+    <h2 class="modal-title">아바타 선택</h2>
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="closeAvatarModal">닫기</button>
+    </div>
+  </dialog>
+
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
