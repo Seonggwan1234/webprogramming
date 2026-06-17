@@ -51,6 +51,7 @@ categories = categories.map((c, i) => ({ ...c, color: c.color || COLORS[i % COLO
 let year      = new Date().getFullYear();
 let filterCat = 'all';
 let filterTag = 'all';
+let editingId = null;
 
 
 /* =====================
@@ -128,7 +129,10 @@ function renderCards() {
 
   document.getElementById('cardGrid').innerHTML = filtered.map((item, idx) => `
     <div class="card ${safe(item.category)}" style="--i:${idx}; --cat-color:${getColor(item.category)}">
-      <button class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
+      <div class="card-actions">
+        <button class="btn-edit" data-id="${item.id}"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
       <div class="card-media"></div>
       <div class="card-type">${safe((getCat(item.category) || {}).name || item.category)}</div>
       <h3>${safe(item.title)}</h3>
@@ -200,26 +204,51 @@ document.querySelector('.year-display').addEventListener('click', e => {
 
 document.getElementById('recordForm').onsubmit = e => {
   e.preventDefault();
-  archive.unshift({
-    id:       Date.now(),
-    year,
+  const data = {
     category: document.getElementById('f-category').value,
     title:    document.getElementById('f-title').value,
     subtitle: document.getElementById('f-subtitle').value,
     tags:     document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean),
-  });
+  };
+
+  if (editingId !== null) {
+    const idx = archive.findIndex(i => i.id === editingId);
+    if (idx !== -1) archive[idx] = { ...archive[idx], ...data };
+    editingId = null;
+  } else {
+    archive.unshift({ id: Date.now(), year, ...data });
+  }
+
   save();
   renderAll();
   document.getElementById('addModal').close();
+  document.getElementById('modalTitle').textContent = '새 취향 기록하기';
   e.target.reset();
 };
 
 document.getElementById('cardGrid').addEventListener('click', e => {
-  const btn = e.target.closest('.btn-delete');
-  if (!btn || !confirm('정말 삭제할까요?')) return;
-  archive = archive.filter(i => i.id !== Number(btn.dataset.id));
-  save();
-  renderAll();
+  const delBtn = e.target.closest('.btn-delete');
+  if (delBtn) {
+    if (!confirm('정말 삭제할까요?')) return;
+    archive = archive.filter(i => i.id !== Number(delBtn.dataset.id));
+    save();
+    renderAll();
+    return;
+  }
+
+  const editBtn = e.target.closest('.btn-edit');
+  if (editBtn) {
+    const item = archive.find(i => i.id === Number(editBtn.dataset.id));
+    if (!item) return;
+    editingId = item.id;
+    document.getElementById('modalTitle').textContent = '취향 기록 수정하기';
+    renderCategoryModal();
+    document.getElementById('f-category').value = item.category;
+    document.getElementById('f-title').value    = item.title;
+    document.getElementById('f-subtitle').value = item.subtitle;
+    document.getElementById('f-tags').value     = item.tags.join(', ');
+    openModal('addModal');
+  }
 });
 
 
@@ -274,8 +303,12 @@ document.getElementById('categoryList').addEventListener('click', e => {
 const openModal  = id => document.getElementById(id).showModal();
 const closeModal = id => document.getElementById(id).close();
 
-document.getElementById('openModal').onclick           = () => openModal('addModal');
-document.getElementById('closeModal').onclick          = () => closeModal('addModal');
+document.getElementById('openModal').onclick  = () => openModal('addModal');
+document.getElementById('closeModal').onclick = () => {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '새 취향 기록하기';
+  closeModal('addModal');
+};
 document.getElementById('openCategoryModal').onclick   = () => openModal('categoryModal');
 document.getElementById('closeCategoryModal').onclick  = () => closeModal('categoryModal');
 document.getElementById('closeAvatarModal').onclick    = () => closeModal('avatarModal');

@@ -448,11 +448,32 @@ header {
 .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .card-tag { background: var(--bg-main); color: var(--text-sub); font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
 
-.btn-delete {
-  position: absolute; top: 18px; right: 18px;
-  color: #B8B4A9; background: none; font-size: 14px; transition: color 0.2s;
+.card-actions {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
-.btn-delete:hover { color: #C24A4A; }
+.card:hover .card-actions { opacity: 1; }
+
+.btn-delete, .btn-edit {
+  color: #B8B4A9;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-delete:hover { color: #C24A4A; border-color: #C24A4A; }
+.btn-edit:hover   { color: var(--accent-2); border-color: var(--accent-2); }
 
 /* 모달 스타일 */
 dialog {
