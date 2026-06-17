@@ -70,10 +70,18 @@
         </section>
 
         <section class="bottom-section">
-          <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="제목, 아티스트, 태그로 검색...">
-            <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
+          <div class="search-row">
+            <div class="search-bar">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="searchInput" placeholder="제목, 아티스트, 태그로 검색...">
+              <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <select id="sortSelect" class="sort-select">
+              <option value="newest">최신순</option>
+              <option value="title">이름순</option>
+              <option value="rating">별점순</option>
+              <option value="category">카테고리순</option>
+            </select>
           </div>
           <div class="tag-filter-container" id="tagList"></div>
           <div class="archive-grid" id="cardGrid"></div>

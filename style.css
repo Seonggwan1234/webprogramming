@@ -386,6 +386,34 @@ header {
 /* 하단 섹션 */
 .bottom-section { display: flex; flex-direction: column; gap: 24px; }
 
+.search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.search-row .search-bar { flex: 1; }
+
+.sort-select {
+  padding: 14px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B6574' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.sort-select:focus { border-color: var(--text-main); }
+
 .search-bar {
   display: flex;
   align-items: center;

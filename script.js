@@ -54,6 +54,7 @@ let filterTag = 'all';
 let editingId   = null;
 let formRating  = 0;
 let searchQuery = '';
+let sortOrder   = 'newest';
 
 
 /* =====================
@@ -144,7 +145,15 @@ function renderCards() {
     (!q || i.title.toLowerCase().includes(q) || i.subtitle.toLowerCase().includes(q) || i.tags.some(t => t.toLowerCase().includes(q)))
   );
 
-  document.getElementById('cardGrid').innerHTML = filtered.map((item, idx) => `
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortOrder === 'newest')   return b.id - a.id;
+    if (sortOrder === 'title')    return a.title.localeCompare(b.title, 'ko');
+    if (sortOrder === 'rating')   return (b.rating || 0) - (a.rating || 0);
+    if (sortOrder === 'category') return a.category.localeCompare(b.category);
+    return 0;
+  });
+
+  document.getElementById('cardGrid').innerHTML = sorted.map((item, idx) => `
     <div class="card ${safe(item.category)}" style="--i:${idx}; --cat-color:${getColor(item.category)}">
       <div class="card-actions">
         <button class="btn-edit" data-id="${item.id}"><i class="fa-solid fa-pen"></i></button>
@@ -347,6 +356,11 @@ searchClear.addEventListener('click', () => {
   searchQuery = '';
   searchClear.style.display = 'none';
   searchInput.focus();
+  renderCards();
+});
+
+document.getElementById('sortSelect').addEventListener('change', e => {
+  sortOrder = e.target.value;
   renderCards();
 });
 
