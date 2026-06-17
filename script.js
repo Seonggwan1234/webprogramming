@@ -51,8 +51,9 @@ categories = categories.map((c, i) => ({ ...c, color: c.color || COLORS[i % COLO
 let year      = new Date().getFullYear();
 let filterCat = 'all';
 let filterTag = 'all';
-let editingId  = null;
-let formRating = 0;
+let editingId   = null;
+let formRating  = 0;
+let searchQuery = '';
 
 
 /* =====================
@@ -135,10 +136,12 @@ function renderTagFilter() {
 
 function renderCards() {
   if (filterCat !== 'all' && !getCat(filterCat)) filterCat = 'all';
+  const q = searchQuery.toLowerCase();
   const filtered = archive.filter(i =>
     i.year === year &&
     (filterCat === 'all' || i.category === filterCat) &&
-    (filterTag === 'all' || i.tags.includes(filterTag))
+    (filterTag === 'all' || i.tags.includes(filterTag)) &&
+    (!q || i.title.toLowerCase().includes(q) || i.subtitle.toLowerCase().includes(q) || i.tags.some(t => t.toLowerCase().includes(q)))
   );
 
   document.getElementById('cardGrid').innerHTML = filtered.map((item, idx) => `
@@ -329,6 +332,23 @@ document.getElementById('closeCategoryModal').onclick  = () => closeModal('categ
 document.getElementById('closeAvatarModal').onclick    = () => closeModal('avatarModal');
 
 document.getElementById('logoutBtn').onclick = () => { clearCurrentUser(); location.href = 'login.html'; };
+
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value.trim();
+  searchClear.style.display = searchQuery ? '' : 'none';
+  renderCards();
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.style.display = 'none';
+  searchInput.focus();
+  renderCards();
+});
 
 const starInput = document.getElementById('starInput');
 starInput.addEventListener('mouseover', e => {

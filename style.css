@@ -386,6 +386,38 @@ header {
 /* 하단 섹션 */
 .bottom-section { display: flex; flex-direction: column; gap: 24px; }
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px 20px;
+  transition: border-color 0.2s;
+}
+.search-bar:focus-within { border-color: var(--text-main); }
+.search-bar > i { color: var(--text-sub); font-size: 14px; flex-shrink: 0; }
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  outline: none;
+}
+.search-bar input::placeholder { color: var(--text-sub); }
+.search-clear {
+  background: none;
+  color: var(--text-sub);
+  font-size: 13px;
+  padding: 2px 4px;
+  display: none;
+  transition: color 0.2s;
+}
+.search-clear:hover { color: var(--text-main); }
+
 .tag-filter-container {
   background: var(--bg-card);
   border: 1px solid var(--border);
