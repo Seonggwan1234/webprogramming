@@ -445,6 +445,27 @@ header {
 }
 .card h3 { font-size: 22px; margin-bottom: 6px; }
 .card .subtitle { font-size: 13px; color: var(--text-sub); margin-bottom: 16px; }
+.card-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #F0B429;
+}
+.card-stars .fa-regular { color: var(--border); }
+
+.star-input {
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  color: var(--border);
+  cursor: pointer;
+  padding: 4px 0;
+}
+.star-input i { transition: color 0.1s, transform 0.1s; }
+.star-input i:hover { transform: scale(1.15); }
+.star-input .fa-solid { color: #F0B429; }
+
 .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .card-tag { background: var(--bg-main); color: var(--text-sub); font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
 

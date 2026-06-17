@@ -51,7 +51,8 @@ categories = categories.map((c, i) => ({ ...c, color: c.color || COLORS[i % COLO
 let year      = new Date().getFullYear();
 let filterCat = 'all';
 let filterTag = 'all';
-let editingId = null;
+let editingId  = null;
+let formRating = 0;
 
 
 /* =====================
@@ -66,6 +67,19 @@ function safe(str) {
 
 function getCat(id)   { return categories.find(c => c.id === id); }
 function getColor(id) { return (getCat(id) || {}).color || COLORS[0]; }
+
+function setStarDisplay(rating) {
+  document.querySelectorAll('#starInput i').forEach((el, i) => {
+    el.className = i < rating ? 'fa-solid fa-star' : 'fa-regular fa-star';
+  });
+}
+
+function resetModal() {
+  editingId  = null;
+  formRating = 0;
+  setStarDisplay(0);
+  document.getElementById('modalTitle').textContent = '새 취향 기록하기';
+}
 
 function save() {
   localStorage.setItem(KEY.archive,    JSON.stringify(archive));
@@ -137,6 +151,8 @@ function renderCards() {
       <div class="card-type">${safe((getCat(item.category) || {}).name || item.category)}</div>
       <h3>${safe(item.title)}</h3>
       <p class="subtitle">${safe(item.subtitle)}</p>
+      ${item.rating ? `<div class="card-stars">${Array.from({length:5}, (_,i) =>
+        `<i class="${i < item.rating ? 'fa-solid' : 'fa-regular'} fa-star"></i>`).join('')}</div>` : ''}
       <div class="card-tags">
         ${item.tags.map(t => `<span class="card-tag">${safe(t)}</span>`).join('')}
       </div>
@@ -209,6 +225,7 @@ document.getElementById('recordForm').onsubmit = e => {
     title:    document.getElementById('f-title').value,
     subtitle: document.getElementById('f-subtitle').value,
     tags:     document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+    rating:   formRating,
   };
 
   if (editingId !== null) {
@@ -222,7 +239,7 @@ document.getElementById('recordForm').onsubmit = e => {
   save();
   renderAll();
   document.getElementById('addModal').close();
-  document.getElementById('modalTitle').textContent = '새 취향 기록하기';
+  resetModal();
   e.target.reset();
 };
 
@@ -240,13 +257,15 @@ document.getElementById('cardGrid').addEventListener('click', e => {
   if (editBtn) {
     const item = archive.find(i => i.id === Number(editBtn.dataset.id));
     if (!item) return;
-    editingId = item.id;
+    editingId  = item.id;
+    formRating = item.rating || 0;
     document.getElementById('modalTitle').textContent = '취향 기록 수정하기';
     renderCategoryModal();
     document.getElementById('f-category').value = item.category;
     document.getElementById('f-title').value    = item.title;
     document.getElementById('f-subtitle').value = item.subtitle;
     document.getElementById('f-tags').value     = item.tags.join(', ');
+    setStarDisplay(formRating);
     openModal('addModal');
   }
 });
@@ -304,16 +323,27 @@ const openModal  = id => document.getElementById(id).showModal();
 const closeModal = id => document.getElementById(id).close();
 
 document.getElementById('openModal').onclick  = () => openModal('addModal');
-document.getElementById('closeModal').onclick = () => {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = '새 취향 기록하기';
-  closeModal('addModal');
-};
+document.getElementById('closeModal').onclick = () => { resetModal(); closeModal('addModal'); };
 document.getElementById('openCategoryModal').onclick   = () => openModal('categoryModal');
 document.getElementById('closeCategoryModal').onclick  = () => closeModal('categoryModal');
 document.getElementById('closeAvatarModal').onclick    = () => closeModal('avatarModal');
 
 document.getElementById('logoutBtn').onclick = () => { clearCurrentUser(); location.href = 'login.html'; };
+
+const starInput = document.getElementById('starInput');
+starInput.addEventListener('mouseover', e => {
+  const star = e.target.closest('[data-value]');
+  if (!star) return;
+  setStarDisplay(Number(star.dataset.value));
+});
+starInput.addEventListener('mouseleave', () => setStarDisplay(formRating));
+starInput.addEventListener('click', e => {
+  const star = e.target.closest('[data-value]');
+  if (!star) return;
+  const val = Number(star.dataset.value);
+  formRating = formRating === val ? 0 : val;
+  setStarDisplay(formRating);
+});
 
 
 /* =====================
